@@ -23,10 +23,15 @@ https://tp2-backend.vercel.app
 - **Backend**
 
 PORT=8080
+
 MONGO_DB_URI= tu uri de mongodb
+
 JWT_SECRET_KEY= tu clave de jwt
+
 GMAIL_USERNAME=
+
 GMAIL_PASSWORD=
+
 URL_FRONTEND=
 
 - **Frontend**
@@ -37,8 +42,8 @@ VITE_API_URL= url de backend
 
 - **Clonar el repositorio:**
 
-git clone https://github.com/CURAcu/TP2.git
-cd REPO
+1. git clone https://github.com/CURAcu/TP2.git
+2. cd REPO
 
 - **Backend:**
 
