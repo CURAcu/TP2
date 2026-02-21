@@ -36,7 +36,6 @@ workspaceRouter.post(
     channelController.create
 )
 
-
 workspaceRouter.post(
     '/:workspace_id/channels/:channel_id/messages',
     authMiddleware,
@@ -45,7 +44,6 @@ workspaceRouter.post(
     messagesController.create
 )
 
-
 workspaceRouter.get(
     '/:workspace_id/channels/:channel_id/messages',
     authMiddleware,
@@ -53,6 +51,5 @@ workspaceRouter.get(
     channelMiddleware,
     messagesController.getByChannelId
 )
-
 
 export default workspaceRouter

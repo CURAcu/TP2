@@ -1,4 +1,3 @@
-
 import { connectMongoDB } from "./config/mongoDB.config.js"
 import express from 'express'
 import authRouter from "./routes/auth.router.js"

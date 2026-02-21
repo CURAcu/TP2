@@ -14,5 +14,4 @@ export async function connectMongoDB (){
         console.error("Conexion con MongoDB fallo")
         console.error(error)
     }
-    
 }

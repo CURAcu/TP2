@@ -30,23 +30,23 @@ class AuthController {
                 ENVIRONMENT.JWT_SECRET_KEY
             )
 
-            mail_transporter.sendMail(
-                {
-                    from: ENVIRONMENT.GMAIL_USERNAME,
-                    to: email,
-                    subject: 'Verifica tu email',
-                    html: `
-                    <h1>Bienvenido ${username}</h1>
-                    <p>Necesitamos que verifiques tu mail</p>
-                    <p>Haz click en "Verificar" para verificar este mail</p>
-                    <a 
-                    href='http://localhost:8080/api/auth/verify-email?verification_email_token=${verification_email_token}'
-                    >Verificar</a>
-                    <br>
-                    <span>Si desconoces este registro desestima este mail</span>
-                    `
-                }
-            )
+//            mail_transporter.sendMail(
+//                {
+//                    from: ENVIRONMENT.GMAIL_USERNAME,
+//                    to: email,
+//                    subject: 'Verifica tu email',
+//                    html: `
+//                    <h1>Bienvenido ${username}</h1>
+//                    <p>Necesitamos que verifiques tu mail</p>
+//                    <p>Haz click en "Verificar" para verificar este mail</p>
+//                    <a 
+//                    href='http://localhost:8080/api/auth/verify-email?verification_email_token=${verification_email_token}'
+//                    >Verificar</a>
+//                    <br>
+//                    <span>Si desconoces este registro desestima este mail</span>
+//                    `
+//                }
+//            )
 
             return response.json({
                 message: 'Usuario creado exitosamente',
@@ -96,9 +96,9 @@ class AuthController {
                 throw new ServerError('Credenciales invalidas', 401)
             }
 
-            if (!usuario_encontrado.email_verified) {
-                throw new ServerError('Usuario con email no verificado', 401)
-            }
+//            if (!usuario_encontrado.email_verified) {
+//                throw new ServerError('Usuario con email no verificado', 401)
+//            }
 
             const datos_del_token = {
                 username: usuario_encontrado.username,
