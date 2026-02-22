@@ -21,7 +21,6 @@ const WorkspaceContextProvider = ({ children }) => {
         },
         []
     )
-    
 
     const provider_values = {
         workspace_list_loading: loading,

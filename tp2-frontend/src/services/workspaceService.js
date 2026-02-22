@@ -7,6 +7,7 @@ export async function getWorkspaceList() {
         {
             method: 'GET',
             headers: {
+                'x-api-key': import.meta.env.VITE_API_KEY,
                 'Authorization': 'Bearer ' + localStorage.getItem('auth_token'),
             },
         }
@@ -24,6 +25,7 @@ export async function createWorkspace(workspace_data) {
         {
             method: 'POST',
             headers: {
+                'x-api-key': import.meta.env.VITE_API_KEY,
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('auth_token'),
             },

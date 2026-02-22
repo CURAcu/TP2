@@ -1,13 +1,9 @@
 import React, { useContext } from 'react'
 import { WorkspaceContext } from '../../Context/WorkspaceContext'
 
-
-
-
 const HomeScreen = () => {
     const {workspace_list_loading, workspace_list_error, workspace_list} = useContext(WorkspaceContext)
     console.log(workspace_list)
-
 
     if(workspace_list_loading || !workspace_list) {
         return <span>Loading...</span>

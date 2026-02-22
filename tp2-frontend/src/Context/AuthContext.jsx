@@ -2,7 +2,6 @@ import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext()
-
 export const AUTH_TOKEN_KEY = 'auth_token'
 
 function decodeAuthToken (auth_token){
@@ -16,12 +15,7 @@ function AuthContextProvider ({children}){
 
     useEffect(
         () => {
-            const auth_token = localStorage.getItem(AUTH_TOKEN_KEY)
-            if(auth_token){
-                setIsLogged(true)
-                const session_decoded = jwtDecode(auth_token)
-                setSession(session_decoded)
-            }
+
         }, 
         []
     )
