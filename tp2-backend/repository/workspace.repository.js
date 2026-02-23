@@ -56,6 +56,14 @@ class WorkspaceRepository {
     async delete(workspace_id){
         await Workspace.findByIdAndUpdate(workspace_id, {active: false})
     }
+
+    async updateById(workspace_id, payload) {
+        return await Workspace.findByIdAndUpdate(
+            workspace_id,
+            payload,
+            { new: true }
+        )
+    }
 }
 
 const workspaceRepository = new WorkspaceRepository()

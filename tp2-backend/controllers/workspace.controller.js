@@ -119,6 +119,32 @@ class WorkspaceController {
             message: 'Espacio de trabajo seleccionado'
         })
     }
+
+    async update(request, response) {
+        const { workspace_id } = request.params
+        const { title, image, description } = request.body
+
+        if (!title && !image && !description) {
+            throw new ServerError('Debes enviar al menos un campo para actualizar', 400)
+        }
+
+        const updated = await workspaceRepository.updateById(workspace_id, {
+            ...(title !== undefined && { title }),
+            ...(image !== undefined && { image }),
+            ...(description !== undefined && { description }),
+        })
+
+        if (!updated) {
+            throw new ServerError('No existe ese espacio de trabajo', 404)
+        }
+
+        return response.json({
+            ok: true,
+            status: 200,
+            message: 'Workspace actualizado correctamente',
+            data: { workspace: updated }
+        })
+    }
 }
 
 const workspaceController = new WorkspaceController()

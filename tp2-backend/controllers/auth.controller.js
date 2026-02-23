@@ -21,13 +21,12 @@ class AuthController {
         await userRepository.crear(email, hashed_password, username)
 
         const verification_email_token = jwt.sign(
-            {
-                email: email
-            },
-            ENVIRONMENT.JWT_SECRET_KEY
-        )
+            { email: email },
+            ENVIRONMENT.JWT_SECRET_KEY,
+            { expiresIn: "1h" }
+)
 
-        mail_transporter.sendMail(
+        await mail_transporter.sendMail(
             {
                 from: ENVIRONMENT.GMAIL_USERNAME,
                 to: email,
@@ -37,14 +36,14 @@ class AuthController {
                 <p>Necesitamos que verifiques tu mail</p>
                 <p>Haz click en "Verificar" para verificar este mail</p>
                 <a 
-                href='http://localhost:8080/api/auth/verify-email?verification_email_token=${verification_email_token}'
+                href='${ENVIRONMENT.URL_BACKEND}/api/auth/verify-email?verification_email_token=${verification_email_token}'
                 >Verificar</a>
                 <br>
                 <span>Si desconoces este registro desestima este mail</span>`
             }
         )
 
-        return response.json({
+        return response.status(201).json({
             message: 'Usuario creado exitosamente',
             status: 201,
             ok: true,
@@ -80,10 +79,12 @@ class AuthController {
         const datos_del_token = {
             username: usuario_encontrado.username,
             email: usuario_encontrado.email,
-            id: usuario_encontrado.id
+            id: usuario_encontrado._id
         }
 
-        const auth_token = jwt.sign(datos_del_token, ENVIRONMENT.JWT_SECRET_KEY)
+        const auth_token = jwt.sign(datos_del_token, ENVIRONMENT.JWT_SECRET_KEY,
+            { expiresIn: "1d" }
+        )
         return response.json({
             message: 'Inicio de sesion exitoso',
             ok: true,
@@ -128,8 +129,11 @@ class AuthController {
                 ENVIRONMENT.URL_FRONTEND + '/login?from=email-validated'
             )
         } catch (error) {
+            if (error instanceof jwt.TokenExpiredError) {
+                throw new ServerError("Token expirado", 401)
+            }
             if (error instanceof jwt.JsonWebTokenError) {
-                throw new ServerError('No autorizado', 401)
+                throw new ServerError("No autorizado", 401)
             }
             throw error
         }

@@ -52,4 +52,11 @@ workspaceRouter.get(
     messagesController.getByChannelId
 )
 
+workspaceRouter.put(
+    '/:workspace_id',
+    authMiddleware,
+    workspaceMiddleware(['Owner', 'Admin']),
+    workspaceController.update
+)
+
 export default workspaceRouter

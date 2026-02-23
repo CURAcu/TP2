@@ -3,7 +3,6 @@ import express from 'express'
 import authRouter from "./routes/auth.router.js"
 import cors from 'cors'
 import workspaceRouter from "./routes/workspace.router.js"
-import { verifyApiKeyMiddleware } from "./middlewares/apikey.middleware.js"
 import { errorHandlerMiddleware } from "./middlewares/error.middleware.js"
 
 connectMongoDB()
@@ -12,7 +11,6 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
-app.use(verifyApiKeyMiddleware)
 
 app.get('/', (request, response) => {
     response.json({
@@ -27,9 +25,8 @@ app.use("/api/workspace", workspaceRouter)
 
 app.use(errorHandlerMiddleware)
 
-app.listen(
-    8082,
-    () => {
-        console.log('Nuestra app se escucha en el puerto 8082')
-    }
-)
+const PORT = process.env.PORT || 8080
+
+app.listen(PORT, () => {
+    console.log(`Nuestra app se escucha en el puerto ${PORT}`)
+})
