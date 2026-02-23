@@ -20,7 +20,7 @@ https://tp2-backend.vercel.app
 
 ## Variables:
 
-- **Backend**
+### Backend
 
 PORT= puerto del servidor
 
@@ -38,7 +38,7 @@ URL_FRONTEND= URL base del frontend
 
 URL_BACKEND= URL base del frontend
 
-- **Frontend**
+### Frontend
 
 VITE_API_URL= URL base del backend
 
