@@ -96,7 +96,7 @@ VITE_API_URL= URL base del backend
 
 #### Editar workspace
 - PUT
-- /workspaces/workspace_id
+- /workspace/workspace_id
 - Auth -> Bearer Token -> Token
 - Body -> { title, description }
 
@@ -118,14 +118,14 @@ VITE_API_URL= URL base del backend
 - Auth -> Bearer Token -> Token
 - Body -> { name }
 
-#### Lista de canales del usuario
+#### Lista de canales del workspace del usuario
 - GET
 - /workspace/workspace_id/channels
 - Auth -> Bearer Token -> Token
 
 #### Eliminar canal
 - DELETE
-- /workspace/workspace_id/channels
+- /workspace/workspace_id/channels/channel_id
 - Auth -> Bearer Token -> Token
 
 ### Messages:
@@ -143,5 +143,5 @@ VITE_API_URL= URL base del backend
 
 #### Eliminar mensaje
 - DELETE
-- /workspace/workspace_id/channels/messages/message_id
+- /workspace/workspace_id/channels/channel_id/messages/message_id
 - Auth -> Bearer Token -> Token

@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { Link } from "react-router-dom"
 import { WorkspaceContext } from '../../Context/WorkspaceContext'
 
 const HomeScreen = () => {
@@ -18,7 +19,13 @@ const HomeScreen = () => {
             }
             {
                 workspace_list.data.workspaces && workspace_list.data.workspaces.length > 0 && workspace_list.data.workspaces.map(
-                    workspace => <div key={workspace.workspace_id}>{workspace.workspace_title}</div>
+                    workspace => (
+                        <div key={workspace.workspace_id}>
+                            <Link to={`/workspaces/${workspace.workspace_id}`}>
+                            {workspace.workspace_title}
+                            </Link>
+                        </div>
+                    )
                 )
             }
             {
