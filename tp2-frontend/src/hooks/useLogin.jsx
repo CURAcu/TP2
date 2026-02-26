@@ -17,15 +17,14 @@ function useLogin() {
     const { response, error, loading, sendRequest } = useRequest()
 
     function logearse(form_state) {
+        if (!form_state.email?.trim()) return
+        if (!form_state.password?.trim()) return
         sendRequest(
             () => {
                 return login(form_state.email, form_state.password)
             }
         )
     }
-
-    if (!form_state.email?.trim()) return
-    if (!form_state.password?.trim()) return
 
     const {
         onChangeFieldValue,
