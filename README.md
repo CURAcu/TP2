@@ -13,7 +13,7 @@ Este proyecto consiste en un trabajo parecido a Slack
 ## Deploy
 
 - Frontend
-https://tp2-frontend.vercel.app/
+https://tp2-frontend.vercel.app
 
 - Backend
 https://tp2-backend.vercel.app
@@ -36,7 +36,7 @@ GMAIL_PASSWORD= Contraseña usada
 
 URL_FRONTEND= URL base del frontend
 
-URL_BACKEND= URL base del frontend
+URL_BACKEND= URL base del backend
 
 ### Frontend
 
