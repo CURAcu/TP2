@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes, Outlet } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import LoginScreen from './Screens/LoginScreen/LoginScreen'
 import RegisterScreen from './Screens/RegisterScreen/RegisterScreen'
 import AuthContextProvider from './Context/AuthContext'
@@ -11,29 +11,23 @@ import WorkspaceDetailScreen from './Screens/WorkspaceDetailScreen/WorkspaceDeta
 import ChannelMessagesScreen from './Screens/ChannelMessagesScreen/ChannelMessagesScreen'
 
 function App() {
+
+
   return (
     <AuthContextProvider>
       <Routes>
         <Route path='/' element={<LoginScreen />} />
         <Route path='/register' element={<RegisterScreen />} />
         <Route path='/login' element={<LoginScreen />} />
-
         <Route element={<AuthMiddleware />}>
-          <Route
-            element={
-              <WorkspaceContextProvider>
-                <Outlet />
-              </WorkspaceContextProvider>
-            }
-          >
-            <Route path='/home' element={<HomeScreen />} />
-            <Route path='/create-workspace' element={<CreateWorkspaceScreen />} />
-            <Route path='/workspaces/:workspace_id' element={<WorkspaceDetailScreen />} />
-            <Route
-              path='/workspaces/:workspace_id/channels/:channel_id'
-              element={<ChannelMessagesScreen />}
-            />
-          </Route>
+          <Route path='/home' element={
+            <WorkspaceContextProvider>
+              <HomeScreen />
+            </WorkspaceContextProvider>
+          } />
+          <Route path='/create-workspace' element={<CreateWorkspaceScreen />} />
+          <Route path='/workspace/:workspace_id' element={<WorkspaceDetailScreen />} />
+          <Route path='/workspace/:workspace_id/channels/:channel_id' element={<ChannelMessagesScreen />} />
         </Route>
       </Routes>
     </AuthContextProvider>

@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import useRequest from "./useRequest"
 import { login } from "../services/authService"
 import useForm from "./useForm"
 import { useContext, useEffect } from "react"
-import { AUTH_TOKEN_KEY, AuthContext } from "../Context/AuthContext"
+import { AuthContext } from "../Context/AuthContext"
 
 function useLogin() {
     const navigate = useNavigate()
@@ -24,6 +24,9 @@ function useLogin() {
         )
     }
 
+    if (!form_state.email?.trim()) return
+    if (!form_state.password?.trim()) return
+
     const {
         onChangeFieldValue,
         onSubmitForm,
@@ -42,6 +45,10 @@ function useLogin() {
         },
         [response]
     )
+
+    useEffect(() => {
+        if (isLogged) navigate("/home");
+    }, [isLogged]);
 
     return {
         form_state,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link } from 'react-router'
 import useForm from '../../hooks/useForm'
 import { register } from '../../services/authService'
 import useRequest from '../../hooks/useRequest'
@@ -62,6 +62,7 @@ const RegisterScreen = () => {
                 }
                 <br />
                 <button type="submit" disabled={loading}>Registrarse</button>
+                {error && <p>{error.message}</p>}
             </form>
             <span>
                 Ya tienes una cuenta? <Link to="/login">iniciar sesion</Link>

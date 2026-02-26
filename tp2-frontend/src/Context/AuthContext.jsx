@@ -1,42 +1,79 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
-export const AuthContext = createContext()
-export const AUTH_TOKEN_KEY = 'auth_token'
+export const AuthContext = createContext();
 
-function decodeAuthToken (auth_token){
-    return jwtDecode(auth_token)
+export const AUTH_TOKEN_KEY = "auth_token";
+
+function safeDecode(token) {
+    try {
+        return jwtDecode(token);
+    } catch {
+        return null;
+    }
 }
 
-function AuthContextProvider ({children}){
-    const auth_token = localStorage.getItem(AUTH_TOKEN_KEY)
-    const [isLogged, setIsLogged] = useState(Boolean(auth_token))
-    const [session, setSession] = useState(auth_token ? decodeAuthToken(auth_token) : null)
+function isExpired(decoded) {
+    if (!decoded?.exp) return false;
+    return decoded.exp * 1000 < Date.now();
+}
 
-    useEffect(
-        () => {
+function AuthContextProvider({ children }) {
+    const [authToken, setAuthToken] = useState(null);
+    const [session, setSession] = useState(null);
+    const [isLogged, setIsLogged] = useState(false);
 
-        }, 
-        []
-    )
-
-    function saveSession (auth_token){
-        localStorage.setItem(AUTH_TOKEN_KEY, auth_token)
-        setIsLogged(true)
-        const session_decoded = jwtDecode(auth_token)
-        setSession(session_decoded)
+    function clearSession() {
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+        setAuthToken(null);
+        setSession(null);
+        setIsLogged(false);
     }
 
-    const providerValues = {
-        saveSession,
-        session,
-        isLogged
+    function loadSessionFromStorage() {
+        const token = localStorage.getItem(AUTH_TOKEN_KEY);
+        if (!token) return clearSession();
+
+        const decoded = safeDecode(token);
+        if (!decoded) return clearSession();
+        if (isExpired(decoded)) return clearSession();
+
+        setAuthToken(token);
+        setSession(decoded);
+        setIsLogged(true);
     }
-    return(
+
+    useEffect(() => {
+        loadSessionFromStorage();
+
+        function onStorage(e) {
+            if (e.key === AUTH_TOKEN_KEY) loadSessionFromStorage();
+        }
+        window.addEventListener("storage", onStorage);
+        return () => window.removeEventListener("storage", onStorage);
+    }, []);
+
+    function saveSession(token) {
+        localStorage.setItem(AUTH_TOKEN_KEY, token);
+        loadSessionFromStorage();
+    }
+
+    const providerValues = useMemo(
+        () => ({
+            saveSession,
+            clearSession,
+            session,
+            isLogged,
+            authToken,
+        }),
+        [session, isLogged, authToken]
+    );
+
+    return (
         <AuthContext.Provider value={providerValues}>
-            {children}
+        {children}
         </AuthContext.Provider>
-    )
+    );
 }
 
 export default AuthContextProvider

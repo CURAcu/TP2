@@ -99,7 +99,7 @@
 }
 
 .submit-btn {
-    background-color: #007a5a;
+    background-color: #007a5a; /* Slack Green */
     color: white;
     border: none;
     padding: 14px;

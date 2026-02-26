@@ -43,6 +43,7 @@ export async function register(username, password, email) {
         }
     )
 
+
     const response = await response_http.json()
     if (!response.ok) {
         throw new ServerError(response.message, response.status)

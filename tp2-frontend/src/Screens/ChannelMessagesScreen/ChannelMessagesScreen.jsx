@@ -1,88 +1,118 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import useRequest from "../../hooks/useRequest"
-import { getMessages, createMessage } from "../../services/messageService"
+import { AuthContext } from "../../Context/AuthContext"
+import { getMessagesByChannelId, createMessage } from "../../services/workspaceService"
 
 const ChannelMessagesScreen = () => {
     const { workspace_id, channel_id } = useParams()
+    const { authToken, clearSession } = useContext(AuthContext)
 
-    const listReq = useRequest()
-    const createReq = useRequest()
+    const { loading, response, error, sendRequest } = useRequest()
 
-    const [content, setContent] = useState("")
+    const {
+        loading: loadingCreate,
+        error: errorCreate,
+        sendRequest: sendCreateRequest,
+    } = useRequest()
+
+    const [messages, setMessages] = useState([])
+    const [text, setText] = useState("")
+
+    const bottomRef = useRef(null)
 
     useEffect(() => {
-        listReq.sendRequest(() => getMessages(workspace_id, channel_id))
-    }, [workspace_id, channel_id])
+        if (!authToken) return
 
-    function onSend(e) {
+        sendRequest(
+            () => getMessagesByChannelId(workspace_id, channel_id, authToken),
+            { onUnauthorized: () => clearSession() }
+        )
+    }, [workspace_id, channel_id, authToken])
+
+    useEffect(() => {
+        const list = response?.data?.messages ?? []
+        setMessages(list)
+    }, [response])
+
+    const orderedMessages = useMemo(() => {
+        if (messages.length === 0) return []
+        const hasCreatedAt = !!messages[0]?.createdAt
+        if (!hasCreatedAt) return messages
+        return [...messages].sort(
+            (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        )
+    }, [messages])
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, [orderedMessages.length])
+
+    async function onSend(e) {
         e.preventDefault()
-        if (!content.trim()) return
+        const mensaje = text.trim()
+        if (!mensaje) return
 
-        createReq.sendRequest(async () => {
-        await createMessage(workspace_id, channel_id, { content: content.trim() })
-        setContent("")
-        return await getMessages(workspace_id, channel_id)
-        })
+        await sendCreateRequest(
+            async () => {
+                const r = await createMessage(workspace_id, channel_id, mensaje, authToken)
+                const created = r?.data?.message_created || r?.data?.message || null
+
+                if (created) {
+                    setMessages((prev) => [...prev, created])
+                } else {
+                    setMessages((prev) => [...prev, { _id: Date.now().toString(), mensaje }])
+                }
+
+                setText("")
+            },
+        { onUnauthorized: () => clearSession() }
+        )
     }
-
-    const messages =
-        createReq.response?.data?.messages ||
-        listReq.response?.data?.messages ||
-        []
 
     return (
         <div>
-        <h1>Mensajes</h1>
+            <Link to={`/workspace/${workspace_id}`}>Volver al workspace</Link>
 
-        <div style={{ marginBottom: 12 }}>
-            <Link to={`/workspaces/${workspace_id}`}>Volver al workspace</Link>
-        </div>
+            <h2>Mensajes</h2>
 
-        {listReq.loading && !listReq.response && <span>Cargando mensajes...</span>}
-        {listReq.error && <div style={{ color: "red" }}>{listReq.error.message}</div>}
+            {loading && <p>Cargando mensajes...</p>}
+            {error && <p>{error.message}</p>}
 
-        {!listReq.loading && listReq.response && messages.length === 0 && (
-            <span>No hay mensajes todavía</span>
-        )}
+            {!loading && !error && orderedMessages.length === 0 && <p>No hay mensajes</p>}
 
-        {messages.length > 0 && (
-            <div style={{ marginTop: 12 }}>
-            {messages.map((m) => (
-                <div key={m.message_id} style={{ marginBottom: 10 }}>
-                <div>
-                    <strong>{m.user?.name || m.user?.email || "Usuario"}</strong>
+            {!loading && !error && orderedMessages.length > 0 && (
+                <div style={{ maxHeight: 400, overflowY: "auto", border: "1px solid #ddd", padding: 12 }}>
+                    {orderedMessages.map((msg) => {
+                        const id = msg._id || msg.id
+                        const user = msg?.fk_workspace_member_id?.fk_id_user
+                        const username = user?.username || user?.email || "Usuario"
+
+                        return (
+                            <div key={id} style={{ marginBottom: 10 }}>
+                                <strong>{username}:</strong> <span>{msg.mensaje}</span>
+                            </div>
+                        )
+                    })}
+                    <div ref={bottomRef} />
                 </div>
-                <div>{m.content}</div>
-                </div>
-            ))}
-            </div>
-        )}
-
-        <hr style={{ margin: "16px 0" }} />
-
-        <form onSubmit={onSend}>
-            <div>
-            <label>Nuevo mensaje:</label>
-            <input
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Escribí algo..."
-            />
-            </div>
-
-            <div style={{ marginTop: 8 }}>
-            <button type="submit" disabled={createReq.loading}>
-                {createReq.loading ? "Enviando..." : "Enviar"}
-            </button>
-            </div>
-
-            {createReq.error && (
-            <div style={{ marginTop: 8, color: "red" }}>
-                {createReq.error.message}
-            </div>
             )}
-        </form>
+
+            <form onSubmit={onSend} style={{ marginTop: 12, display: "flex", gap: 8 }}>
+                <input
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="Escribí un mensaje..."
+                    disabled={loadingCreate}
+                    style={{ flex: 1 }}
+                />
+                <button type="submit" disabled={loadingCreate || text.trim() === ""}>
+                    {loadingCreate ? "Enviando..." : "Enviar"}
+                </button>
+                {errorCreate && <p>{errorCreate.message}</p>}
+            </form>
+
+            {errorCreate && <p>{errorCreate.message}</p>}
         </div>
     )
 }

@@ -2,6 +2,11 @@ import { register } from "../services/authService"
 import useForm from "./useForm"
 import useRequest from "./useRequest"
 
+if (!form_state.username?.trim()) return
+if (!form_state.email?.trim()) return
+if (!form_state.password?.trim()) return
+if (form_state.password.trim().length < 6) return
+
 function useRegister (){
     const {loading, error, response, sendRequest} = useRequest()
 

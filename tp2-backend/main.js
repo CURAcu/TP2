@@ -5,7 +5,7 @@ import cors from 'cors'
 import workspaceRouter from "./routes/workspace.router.js"
 import { errorHandlerMiddleware } from "./middlewares/error.middleware.js"
 
-connectMongoDB()
+await connectMongoDB()
 
 const app = express()
 

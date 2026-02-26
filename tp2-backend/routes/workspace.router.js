@@ -36,6 +36,22 @@ workspaceRouter.post(
     channelController.create
 )
 
+workspaceRouter.put(
+    "/:workspace_id/channels/:channel_id",
+    authMiddleware,
+    workspaceMiddleware(["Owner", "Admin"]),
+    channelMiddleware,
+    channelController.update
+)
+
+workspaceRouter.delete(
+    "/:workspace_id/channels/:channel_id",
+    authMiddleware,
+    workspaceMiddleware(["Owner", "Admin"]),
+    channelMiddleware,
+    channelController.remove
+)
+
 workspaceRouter.post(
     '/:workspace_id/channels/:channel_id/messages',
     authMiddleware,
