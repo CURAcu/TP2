@@ -69,79 +69,80 @@ VITE_API_URL= URL base del backend
 
 #### Registro de ususario (envia mail de verificacion)
 - POST
-- /auth/register
+- api/auth/register
 - Body -> { username, email, password }
 
 #### Verificar mail mediante token
 - GET
-- /auth/verify-email?verification_email_token=
+- api/auth/verify-email?verification_email_token=
 
 #### Login de ususario
 - POST
-- /auth/login
+- api/auth/login
 - Body -> { email, password }
 
 ### Workspaces:
 
 #### Crea workspace
 - POST
-- /workspace
+- api/workspace
 - Auth -> Bearer Token -> Token
 - Body -> { title, description }
 
 #### Lista workspaces del usuario
 - GET
-- /workspace
+- api/workspace
 - Auth -> Bearer Token -> Token
 
 #### Editar workspace
 - PUT
-- /workspace/workspace_id
+- api/workspace/workspace_id
 - Auth -> Bearer Token -> Token
 - Body -> { title, description }
 
 #### Obtiene workspace por id
 - GET
-- /workspace/workspace_id
+- api/workspace/workspace_id
 - Auth -> Bearer Token -> Token
 
 #### Elimina workspace
 - DELETE
-- /workspace/workspace_id
+- api/workspace/workspace_id
 - Auth -> Bearer Token -> Token
+
+#### Invitar usuario
+- POST
+- api/workspace/workspace_id/members
+- Auth -> Bearer Token -> Token
+- Body -> { email, role } (rol admin o member)
 
 ### Channels:
 
 #### Crear canal
 - POST
-- /workspace/workspace_id/channels
+- api/workspace/workspace_id/channels
 - Auth -> Bearer Token -> Token
 - Body -> { name }
 
 #### Lista de canales del workspace del usuario
 - GET
-- /workspace/workspace_id/channels
+- api/workspace/workspace_id/channels
 - Auth -> Bearer Token -> Token
 
 #### Eliminar canal
 - DELETE
-- /workspace/workspace_id/channels/channel_id
+- api/workspace/workspace_id/channels/channel_id
 - Auth -> Bearer Token -> Token
 
 ### Messages:
 
 #### Crear mensaje
 - POST
-- /workspace/workspace_id/channels/messages
+- api/workspace/workspace_id/channels/channel_id/messages
 - Auth -> Bearer Token -> Token
 - Body -> { content }
 
 #### Lista de mensajes del usuario
 - GET
-- /workspace/workspace_id/channels/messages
-- Auth -> Bearer Token -> Token
-
-#### Eliminar mensaje
-- DELETE
-- /workspace/workspace_id/channels/channel_id/messages/message_id
+- api/workspace/workspace_id/channels/channel_id/messages
 - Auth -> Bearer Token -> Token

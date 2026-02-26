@@ -9,11 +9,13 @@ import HomeScreen from './Screens/HomeScreen/HomeScreen'
 import CreateWorkspaceScreen from './Screens/CreateWorkspaceScreen/CreateWorkspaceScreen'
 import WorkspaceDetailScreen from './Screens/WorkspaceDetailScreen/WorkspaceDetailScreen'
 import ChannelMessagesScreen from './Screens/ChannelMessagesScreen/ChannelMessagesScreen'
+import "./global.css";
 
 function App() {
 
 
   return (
+    <div className="container">
     <AuthContextProvider>
       <Routes>
         <Route path='/' element={<LoginScreen />} />
@@ -31,6 +33,7 @@ function App() {
         </Route>
       </Routes>
     </AuthContextProvider>
+    </div>
   )
 }
 

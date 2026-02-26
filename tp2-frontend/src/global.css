@@ -1,0 +1,32 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.container {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    padding: 16px;
+}
+
+input, button, select, textarea {
+    max-width: 100%;
+    font: inherit;
+}
+
+button, input, select, textarea {
+    min-height: 40px;
+}
+
+@media (max-width: 480px) {
+    button {
+        width: 100%;
+    }
+}

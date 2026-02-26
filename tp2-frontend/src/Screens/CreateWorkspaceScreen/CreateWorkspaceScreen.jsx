@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useCreateWorkspace from '../../hooks/useCreateWorkspace'
-import './CreateWorkspaceScreen.css'
 
 const CreateWorkspaceScreen = () => {
     const {

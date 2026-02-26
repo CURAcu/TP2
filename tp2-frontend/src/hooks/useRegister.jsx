@@ -1,9 +1,11 @@
+import { useState } from "react"
 import { register } from "../services/authService"
 import useForm from "./useForm"
 import useRequest from "./useRequest"
 
 function useRegister() {
     const { loading, error, response, sendRequest } = useRequest()
+    const [localError, setLocalError] = useState(null)
 
     const form_initial_state = {
         username: "",
@@ -12,10 +14,11 @@ function useRegister() {
     }
 
     async function enviarRegistro(form_state) {
-        if (!form_state.username?.trim()) return
-        if (!form_state.email?.trim()) return
-        if (!form_state.password?.trim()) return
-        if (form_state.password.trim().length < 6) return
+        setLocalError(null)
+
+        if (!form_state.username?.trim()) return setLocalError("Falta el nombre de usuario")
+        if (!form_state.email?.trim()) return setLocalError("Falta el email")
+        if (!form_state.password?.trim()) return setLocalError("Falta la contraseña")
 
         return sendRequest(() => {
             return register(form_state.username, form_state.password, form_state.email)
@@ -34,6 +37,7 @@ function useRegister() {
         loading,
         error,
         response,
+        localError,
     }
 }
 
